@@ -2,6 +2,8 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Auth\Login;
+use App\Filament\Auth\Register;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -16,20 +18,28 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use SolutionForest\FilamentTranslateField\FilamentTranslateFieldPlugin;
+use Filament\Navigation\NavigationGroup;
 
 class DoctorPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
         return $panel
-            ->login()
-            ->registration()
+            ->registration(Register::class)
+            ->login(Login::class)
             ->passwordReset()
+
+            ->brandLogo(url('logo.png'))
+            ->brandLogoHeight('5rem')
+            ->favicon(url('logo.png'))
+
             ->id('doctor')
             ->path('doctor')
             ->colors([
-                'primary' => '#007FFF',
+                'primary' => '#2F919F',
             ])
+
             ->discoverResources(in: app_path('Filament/Doctor/Resources'), for: 'App\\Filament\\Doctor\\Resources')
             ->discoverPages(in: app_path('Filament/Doctor/Pages'), for: 'App\\Filament\\Doctor\\Pages')
             ->pages([
@@ -53,6 +63,14 @@ class DoctorPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
+            ])->plugins(
+                [
+                    FilamentTranslateFieldPlugin::make()
+                        ->defaultLocales(config('app.available_locale')),
+                ]
+            )->navigationGroups([
+                NavigationGroup::make()
+                    ->label('Medical Record'),
             ]);
     }
 }
