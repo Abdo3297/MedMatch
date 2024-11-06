@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Filament\Doctor\Resources\SurgeryResource\Pages;
+namespace App\Filament\Doctor\Resources\DiseaseResource\Pages;
 
-use App\Filament\Doctor\Resources\SurgeryResource;
+use App\Filament\Doctor\Resources\DiseaseResource;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
 
-class CreateSurgery extends CreateRecord
+class CreateDisease extends CreateRecord
 {
-    protected static string $resource = SurgeryResource::class;
+    protected static string $resource = DiseaseResource::class;
 
     protected function getRedirectUrl(): string
     {
@@ -19,7 +19,7 @@ class CreateSurgery extends CreateRecord
     {
         return Notification::make()
             ->success()
-            ->title('Surgery created')
-            ->body('The Surgery has been created successfully.');
+            ->title('Disease created')
+            ->body('The Disease has been created successfully.');
     }
 }

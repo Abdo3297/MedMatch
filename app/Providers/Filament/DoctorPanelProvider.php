@@ -7,6 +7,7 @@ use App\Filament\Auth\Register;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationGroup;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -19,7 +20,6 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use SolutionForest\FilamentTranslateField\FilamentTranslateFieldPlugin;
-use Filament\Navigation\NavigationGroup;
 
 class DoctorPanelProvider extends PanelProvider
 {
@@ -71,6 +71,8 @@ class DoctorPanelProvider extends PanelProvider
             )->navigationGroups([
                 NavigationGroup::make()
                     ->label('Medical Record'),
+                NavigationGroup::make()
+                    ->label('Patient'),
             ]);
     }
 }

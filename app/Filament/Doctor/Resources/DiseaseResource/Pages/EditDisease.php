@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Filament\Doctor\Resources\SurgeryResource\Pages;
+namespace App\Filament\Doctor\Resources\DiseaseResource\Pages;
 
-use App\Filament\Doctor\Resources\SurgeryResource;
+use App\Filament\Doctor\Resources\DiseaseResource;
 use Filament\Actions;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 
-class EditSurgery extends EditRecord
+class EditDisease extends EditRecord
 {
-    protected static string $resource = SurgeryResource::class;
+    protected static string $resource = DiseaseResource::class;
 
     protected function getHeaderActions(): array
     {
@@ -28,7 +28,7 @@ class EditSurgery extends EditRecord
     {
         return Notification::make()
             ->success()
-            ->title('Surgery edited')
-            ->body('The Surgery has been edited successfully.');
+            ->title('Disease edited')
+            ->body('The Disease has been edited successfully.');
     }
 }

@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class SurgerySeeder extends Seeder
+class ComponentSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -16,9 +16,9 @@ class SurgerySeeder extends Seeder
         $chunk = 5;
 
         for ($i = 0; $i < $total; $i += $chunk) {
-            $surgeries = [];
+            $components = [];
             for ($j = 0; $j < $chunk; $j++) {
-                $surgeries[] = [
+                $components[] = [
                     'name' => json_encode([
                         'ar' => fake('ar_SA')->sentence(),
                         'en' => fake()->sentence(),
@@ -27,7 +27,7 @@ class SurgerySeeder extends Seeder
                     'updated_at' => now(),
                 ];
             }
-            DB::table('surgeries')->insert($surgeries);
+            DB::table('components')->insert($components);
         }
     }
 }

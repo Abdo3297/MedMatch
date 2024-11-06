@@ -2,8 +2,10 @@
 
 namespace App\Filament\Doctor\Resources;
 
-use App\Filament\Doctor\Resources\SurgeryResource\Pages;
-use App\Models\Surgery;
+use App\Filament\Doctor\Resources\MedicineResource\Pages;
+use App\Models\Medicine;
+use Filament\Forms\Components\Actions\Action;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -12,13 +14,13 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use SolutionForest\FilamentTranslateField\Forms\Component\Translate;
 
-class SurgeryResource extends Resource
+class MedicineResource extends Resource
 {
-    protected static ?string $model = Surgery::class;
+    protected static ?string $model = Medicine::class;
 
     protected static ?string $navigationGroup = 'Medical Record';
 
-    protected static ?int $navigationSort = 1;
+    protected static ?int $navigationSort = 4;
 
     public static function getNavigationBadge(): ?string
     {
@@ -35,9 +37,25 @@ class SurgeryResource extends Resource
                             ->required()
                             ->string(),
                     ])
-                    ->columnSpanFull()
                     ->locales(config('app.available_locale')),
-            ]);
+
+                Select::make('components')
+                    ->relationship('components', 'name')
+                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
+                    ->multiple()
+                    ->required()
+                    ->preload()
+                    ->searchable()
+                    ->hintAction(
+                        fn (Select $component) => Action::make('select all')
+                            ->action(fn () => $component->state(Medicine::pluck('id')->toArray()))
+                    )
+                    ->createOptionForm([
+                        TextInput::make('name')
+                            ->required()
+                            ->string(),
+                    ]),
+            ])->columns(1);
     }
 
     public static function table(Table $table): Table
@@ -82,10 +100,10 @@ class SurgeryResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListSurgeries::route('/'),
-            'create' => Pages\CreateSurgery::route('/create'),
-            'view' => Pages\ViewSurgery::route('/{record}'),
-            'edit' => Pages\EditSurgery::route('/{record}/edit'),
+            'index' => Pages\ListMedicines::route('/'),
+            'create' => Pages\CreateMedicine::route('/create'),
+            'view' => Pages\ViewMedicine::route('/{record}'),
+            'edit' => Pages\EditMedicine::route('/{record}/edit'),
         ];
     }
 }

@@ -2,8 +2,8 @@
 
 namespace App\Filament\Doctor\Resources;
 
-use App\Filament\Doctor\Resources\SurgeryResource\Pages;
-use App\Models\Surgery;
+use App\Filament\Doctor\Resources\AllergyResource\Pages;
+use App\Models\Allergy;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -12,13 +12,13 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use SolutionForest\FilamentTranslateField\Forms\Component\Translate;
 
-class SurgeryResource extends Resource
+class AllergyResource extends Resource
 {
-    protected static ?string $model = Surgery::class;
+    protected static ?string $model = Allergy::class;
 
     protected static ?string $navigationGroup = 'Medical Record';
 
-    protected static ?int $navigationSort = 1;
+    protected static ?int $navigationSort = 2;
 
     public static function getNavigationBadge(): ?string
     {
@@ -82,10 +82,10 @@ class SurgeryResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListSurgeries::route('/'),
-            'create' => Pages\CreateSurgery::route('/create'),
-            'view' => Pages\ViewSurgery::route('/{record}'),
-            'edit' => Pages\EditSurgery::route('/{record}/edit'),
+            'index' => Pages\ListAllergies::route('/'),
+            'create' => Pages\CreateAllergy::route('/create'),
+            'view' => Pages\ViewAllergy::route('/{record}'),
+            'edit' => Pages\EditAllergy::route('/{record}/edit'),
         ];
     }
 }

@@ -10,11 +10,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable implements FilamentUser
+class User extends Authenticatable implements FilamentUser, HasMedia
 {
-    use HasFactory, HasRoles, Notifiable;
+    use HasFactory, HasRoles, InteractsWithMedia,Notifiable;
 
     protected $fillable = [
         'name',
@@ -37,6 +39,12 @@ class User extends Authenticatable implements FilamentUser
         ];
     }
 
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('profile')->singleFile();
+        $this->addMediaCollection('rays');
+    }
+
     public function canAccessPanel(Panel $panel): bool
     {
         $user = Auth::user();
@@ -44,7 +52,7 @@ class User extends Authenticatable implements FilamentUser
         if ($panel->getId() === 'admin') {
             return $user->hasRole(RoleType::admin->value);
         } elseif ($panel->getId() === 'doctor') {
-            return $user->hasRole(RoleType::doctor->value);
+            return $user->hasRole(RoleType::doctor->value) || $user->hasRole(RoleType::radiologist->value);
         } else {
             return false;
         }
