@@ -12,11 +12,13 @@ class CreateSurgery extends CreateRecord
 
     protected function getRedirectUrl(): string
     {
+        // بيحولك علي الصفحة الرئيسية
         return $this->getResource()::getUrl('index');
     }
 
     protected function getCreatedNotification(): ?Notification
     {
+        // اظهار الاشعارات
         return Notification::make()
             ->success()
             ->title('Surgery created')

@@ -15,12 +15,13 @@ use SolutionForest\FilamentTranslateField\Forms\Component\Translate;
 
 class SurgeryResource extends Resource
 {
-    protected static ?string $model = Surgery::class;
+    protected static ?string $model = Surgery::class; // هنا بيقلك ايه الموديل اللي هتتعاملي معاه
 
-    protected static ?string $navigationGroup = 'Medical Record';
+    protected static ?string $navigationGroup = 'Medical Record';  // هنا بحدد هما بينتموا لانهي جروب
 
-    protected static ?int $navigationSort = 1;
+    protected static ?int $navigationSort = 1; // ترتيب
 
+    // بقله هاتلي عندك كام ريكورد
     public static function getNavigationBadge(): ?string
     {
         return static::getModel()::count();
@@ -47,16 +48,8 @@ class SurgeryResource extends Resource
             ->columns([
                 TextColumn::make('name')
                     ->searchable()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: false),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->sortable(),
+                
             ])
             ->filters([
                 //

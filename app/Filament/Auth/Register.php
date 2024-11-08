@@ -21,8 +21,8 @@ class Register extends AuthRegister
         return $form->schema([
             $this->getNameFormComponent(),
             $this->getEmailFormComponent(),
-            $this->getPasswordFormComponent(),
-            $this->getPasswordConfirmationFormComponent(),
+            $this->getPasswordFormComponent(), // restrict
+            $this->getPasswordConfirmationFormComponent(), // same
             TextInput::make('ssn')
                 ->label('ssn')
                 ->rule(['digits:10', 'unique:users,ssn'])
@@ -33,10 +33,15 @@ class Register extends AuthRegister
     protected function handleRegistration(array $data): Model
     {
         $user = $this->getUserModel()::create($data);
+        // verify account
         $user->update([
             'email_verified_at' => now(),
         ]);
+        // give role after register
         $user->assignRole(RoleType::doctor->value);
+        //user role
+        //many to many
+        // user id   role id   pivot table
 
         return $user;
     }
