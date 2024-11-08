@@ -19,7 +19,6 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
-use SolutionForest\FilamentTranslateField\FilamentTranslateFieldPlugin;
 
 class DoctorPanelProvider extends PanelProvider
 {
@@ -63,12 +62,7 @@ class DoctorPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-            ])->plugins(
-                [
-                    FilamentTranslateFieldPlugin::make()
-                        ->defaultLocales(config('app.available_locale')),
-                ]
-            )->navigationGroups([
+            ])->navigationGroups([
                 NavigationGroup::make()
                     ->label('Medical Record'),
                 NavigationGroup::make()

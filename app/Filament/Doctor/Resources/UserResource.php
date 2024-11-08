@@ -23,7 +23,7 @@ class UserResource extends Resource
 
     protected static ?string $navigationGroup = 'Patient';
 
-    protected static ?int $navigationSort = 5;
+    protected static ?int $navigationSort = 6;
 
     public static function getNavigationBadge(): ?string
     {
@@ -59,14 +59,12 @@ class UserResource extends Resource
                         ->disabled(auth()->user()->hasRole(RoleType::radiologist->value))
                         ->image()
                         ->downloadable()
-                        ->maxSize(1024)
                         ->collection('profile'),
                 ])->columns(1),
                 Section::make('Patient Rays')->schema([
                     SpatieMediaLibraryFileUpload::make('rays')
                         ->multiple()
                         ->downloadable()
-                        ->maxSize(1024)
                         ->collection('rays')
                         ->disabled(auth()->user()->hasRole(RoleType::doctor->value)),
                 ])->columns(1),

@@ -2,10 +2,8 @@
 
 namespace App\Filament\Doctor\Resources;
 
-use App\Filament\Doctor\Resources\MedicineResource\Pages;
-use App\Models\Medicine;
-use Filament\Forms\Components\Actions\Action;
-use Filament\Forms\Components\Select;
+use App\Filament\Doctor\Resources\ComponentResource\Pages;
+use App\Models\Component;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
@@ -15,13 +13,13 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use SolutionForest\FilamentTranslateField\Forms\Component\Translate;
 
-class MedicineResource extends Resource
+class ComponentResource extends Resource
 {
-    protected static ?string $model = Medicine::class;
+    protected static ?string $model = Component::class;
 
     protected static ?string $navigationGroup = 'Medical Record';
 
-    protected static ?int $navigationSort = 4;
+    protected static ?int $navigationSort = 5;
 
     public static function getNavigationBadge(): ?string
     {
@@ -38,25 +36,9 @@ class MedicineResource extends Resource
                             ->required()
                             ->string(),
                     ])
+                    ->columnSpanFull()
                     ->locales(config('app.available_locale')),
-
-                Select::make('components')
-                    ->relationship('components', 'name')
-                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
-                    ->multiple()
-                    ->required()
-                    ->preload()
-                    ->searchable()
-                    ->hintAction(
-                        fn (Select $component) => Action::make('select all')
-                            ->action(fn () => $component->state(Medicine::pluck('id')->toArray()))
-                    )
-                    ->createOptionForm([
-                        TextInput::make('name')
-                            ->required()
-                            ->string(),
-                    ]),
-            ])->columns(1);
+            ]);
     }
 
     public static function table(Table $table): Table
@@ -86,8 +68,8 @@ class MedicineResource extends Resource
                     ->successNotification(
                         Notification::make()
                             ->success()
-                            ->title('Medicine deleted')
-                            ->body('The Medicine has been deleted successfully.'),
+                            ->title('Component deleted')
+                            ->body('The Component has been deleted successfully.'),
                     ),
             ])
             ->bulkActions([
@@ -96,8 +78,8 @@ class MedicineResource extends Resource
                         ->successNotification(
                             Notification::make()
                                 ->success()
-                                ->title('All Medicines deleted')
-                                ->body('All Medicines have been deleted successfully.'),
+                                ->title('All Components deleted')
+                                ->body('All Components have been deleted successfully.'),
                         ),
                 ]),
             ]);
@@ -113,10 +95,10 @@ class MedicineResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListMedicines::route('/'),
-            'create' => Pages\CreateMedicine::route('/create'),
-            'view' => Pages\ViewMedicine::route('/{record}'),
-            'edit' => Pages\EditMedicine::route('/{record}/edit'),
+            'index' => Pages\ListComponents::route('/'),
+            'create' => Pages\CreateComponent::route('/create'),
+            'view' => Pages\ViewComponent::route('/{record}'),
+            'edit' => Pages\EditComponent::route('/{record}/edit'),
         ];
     }
 }
