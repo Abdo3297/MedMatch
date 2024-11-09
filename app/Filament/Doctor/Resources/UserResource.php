@@ -4,8 +4,14 @@ namespace App\Filament\Doctor\Resources;
 
 use App\Enums\RoleType;
 use App\Filament\Doctor\Resources\UserResource\Pages;
+use App\Models\Allergy;
+use App\Models\Disease;
+use App\Models\Medicine;
+use App\Models\Surgery;
 use App\Models\User;
+use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -16,10 +22,13 @@ use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use SolutionForest\FilamentTranslateField\Forms\Component\Translate;
 
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
+
+    protected static ?string $navigationLabel = 'Patient Information';
 
     protected static ?string $navigationGroup = 'Patient';
 
@@ -51,7 +60,8 @@ class UserResource extends Resource
                         ->readOnly(auth()->user()->hasRole(RoleType::radiologist->value))
                         ->label('ssn')
                         ->required()
-                        ->rule(['digits:10', 'unique:users,ssn'])
+                        ->unique(ignoreRecord: true)
+                        ->rule(['digits:10'])
                         ->numeric(),
                 ])->columns(1),
                 Section::make('Patient Profile')->schema([
@@ -68,6 +78,92 @@ class UserResource extends Resource
                         ->collection('rays')
                         ->disabled(auth()->user()->hasRole(RoleType::doctor->value)),
                 ])->columns(1),
+                Section::make('Patient History')->schema([
+                    Select::make('surgeries')
+                        ->relationship('surgeries', 'name')
+                        ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
+                        ->disabled(auth()->user()->hasRole(RoleType::radiologist->value))
+                        ->multiple()
+                        ->preload()
+                        ->searchable()
+                        ->hintAction(
+                            fn (Select $component) => Action::make('select all')
+                                ->action(fn () => $component->state(Surgery::pluck('id')->toArray()))
+                        )
+                        ->createOptionForm([
+                            Translate::make()
+                                ->schema([
+                                    TextInput::make('name')
+                                        ->required()
+                                        ->string(),
+                                ])
+                                ->columnSpanFull()
+                                ->locales(config('app.available_locale')),
+                        ]),
+                    Select::make('allergies')
+                        ->relationship('allergies', 'name')
+                        ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
+                        ->disabled(auth()->user()->hasRole(RoleType::radiologist->value))
+                        ->multiple()
+                        ->preload()
+                        ->searchable()
+                        ->hintAction(
+                            fn (Select $component) => Action::make('select all')
+                                ->action(fn () => $component->state(Allergy::pluck('id')->toArray()))
+                        )
+                        ->createOptionForm([
+                            Translate::make()
+                                ->schema([
+                                    TextInput::make('name')
+                                        ->required()
+                                        ->string(),
+                                ])
+                                ->columnSpanFull()
+                                ->locales(config('app.available_locale')),
+                        ]),
+                    Select::make('medicines')
+                        ->relationship('medicines', 'name')
+                        ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
+                        ->disabled(auth()->user()->hasRole(RoleType::radiologist->value))
+                        ->multiple()
+                        ->preload()
+                        ->searchable()
+                        ->hintAction(
+                            fn (Select $component) => Action::make('select all')
+                                ->action(fn () => $component->state(Medicine::pluck('id')->toArray()))
+                        )
+                        ->createOptionForm([
+                            Translate::make()
+                                ->schema([
+                                    TextInput::make('name')
+                                        ->required()
+                                        ->string(),
+                                ])
+                                ->columnSpanFull()
+                                ->locales(config('app.available_locale')),
+                        ]),
+                    Select::make('diseases')
+                        ->relationship('diseases', 'name')
+                        ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
+                        ->disabled(auth()->user()->hasRole(RoleType::radiologist->value))
+                        ->multiple()
+                        ->preload()
+                        ->searchable()
+                        ->hintAction(
+                            fn (Select $component) => Action::make('select all')
+                                ->action(fn () => $component->state(Disease::pluck('id')->toArray()))
+                        )
+                        ->createOptionForm([
+                            Translate::make()
+                                ->schema([
+                                    TextInput::make('name')
+                                        ->required()
+                                        ->string(),
+                                ])
+                                ->columnSpanFull()
+                                ->locales(config('app.available_locale')),
+                        ]),
+                ])->columns(1),
             ]);
     }
 
@@ -82,14 +178,7 @@ class UserResource extends Resource
                 SpatieMediaLibraryImageColumn::make('profile')
                     ->circular()
                     ->collection('profile'),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+
             ])
             ->modifyQueryUsing(function (Builder $query) {
                 return $query

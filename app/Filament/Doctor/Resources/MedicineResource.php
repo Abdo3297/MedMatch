@@ -52,9 +52,14 @@ class MedicineResource extends Resource
                             ->action(fn () => $component->state(Medicine::pluck('id')->toArray()))
                     )
                     ->createOptionForm([
-                        TextInput::make('name')
-                            ->required()
-                            ->string(),
+                        Translate::make()
+                            ->schema([
+                                TextInput::make('name')
+                                    ->required()
+                                    ->string(),
+                            ])
+                            ->columnSpanFull()
+                            ->locales(config('app.available_locale')),
                     ]),
             ])->columns(1);
     }
@@ -65,16 +70,8 @@ class MedicineResource extends Resource
             ->columns([
                 TextColumn::make('name')
                     ->searchable()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: false),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->sortable(),
+
             ])
             ->filters([
                 //

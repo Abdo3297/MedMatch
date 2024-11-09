@@ -7,6 +7,7 @@ use App\Enums\RoleType;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
@@ -16,7 +17,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements FilamentUser, HasMedia
 {
-    use HasFactory, HasRoles, InteractsWithMedia,Notifiable;
+    use HasFactory, HasRoles, InteractsWithMedia, Notifiable;
 
     protected $fillable = [
         'name',
@@ -24,6 +25,7 @@ class User extends Authenticatable implements FilamentUser, HasMedia
         'email_verified_at',
         'password',
         'ssn',
+        'result',
     ];
 
     protected $hidden = [
@@ -56,5 +58,29 @@ class User extends Authenticatable implements FilamentUser, HasMedia
         } else {
             return false;
         }
+    }
+
+    public function surgeries(): BelongsToMany
+    {
+        return $this->belongsToMany(Surgery::class, 'user_surgery')
+            ->withTimestamps();
+    }
+
+    public function allergies(): BelongsToMany
+    {
+        return $this->belongsToMany(Allergy::class, 'user_allergy')
+            ->withTimestamps();
+    }
+
+    public function medicines(): BelongsToMany
+    {
+        return $this->belongsToMany(Medicine::class, 'user_medicine')
+            ->withTimestamps();
+    }
+
+    public function diseases(): BelongsToMany
+    {
+        return $this->belongsToMany(Disease::class, 'user_disease')
+            ->withTimestamps();
     }
 }

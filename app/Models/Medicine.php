@@ -21,4 +21,10 @@ class Medicine extends Model
         return $this->belongsToMany(Component::class, 'medicine_component')
             ->withTimestamps();
     }
+
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'user_medicine')
+            ->withTimestamps();
+    }
 }

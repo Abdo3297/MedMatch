@@ -49,7 +49,7 @@ class SurgeryResource extends Resource
                 TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
-                
+
             ])
             ->filters([
                 //
